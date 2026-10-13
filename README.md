@@ -1,5 +1,3 @@
-# indoor-hazard-semantic-segmentation
-A computer vision project exploring semantic segmentation for indoor scene understanding and hazard-oriented environmental analysis.
 # Dual-Stream Progressive Hazard Network (DSPHN): Indoor Hazard Segmentation
 
 DSPHN is a semantic segmentation architecture that identifies safety hazards in indoor scenes from a single RGB image. Instead of labeling objects by what they are, it labels pixels by the injury risk they pose:
