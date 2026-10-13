@@ -1,0 +1,52 @@
+% CVPR 2025 Paper Template
+\documentclass[10pt,twocolumn,letterpaper]{article}
+
+%%%%%%%%% PAPER TYPE
+% \usepackage{cvpr}              % CAMERA-READY version
+\usepackage[review]{cvpr}      % REVIEW version - shows line numbers
+% \usepackage[pagenumbers]{cvpr} % To force page numbers
+
+\input{preamble}
+
+\definecolor{cvprblue}{rgb}{0.21,0.49,0.74}
+\usepackage[pagebackref,breaklinks,colorlinks,allcolors=cvprblue]{hyperref}
+
+%%%%%%%%% PAPER ID
+\def\paperID{AIN3002}
+\def\confName{AIN3002}
+\def\confYear{2026}
+
+%%%%%%%%% PACKAGES
+\usepackage{booktabs}
+\usepackage{graphicx}
+\usepackage{amsmath,amssymb}
+\usepackage{float}
+\usepackage{multirow}
+\usepackage{url}
+\usepackage{xcolor}
+
+%%%%%%%%% TITLE
+\title{Dual-Stream Progressive Hazard Network (DSPHN):\\
+A Novel Architecture Combining Appearance-Context Disentanglement\\
+with Hierarchical Safety-Aware Inference for Indoor Hazard Segmentation}
+
+%%%%%%%%% AUTHORS
+\author{Mehreen Faisal\\
+Department of Artificial Intelligence Engineering\\
+AIN3002 Final Project, 2026
+}
+
+\begin{document}
+\maketitle
+\input{sec/0_abstract}
+\input{sec/1_intro}
+\input{sec/3_method}
+\input{sec/4_data}
+\input{sec/5_experiments}
+\input{sec/6_conclusion}
+{
+    \small
+    \bibliographystyle{ieeenat_fullname}
+    \bibliography{main}
+}
+\end{document}

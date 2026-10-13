@@ -1,0 +1,170 @@
+\section{Data Description}
+\label{sec:data}
+
+\subsection{Base Dataset: ADE20K}
+
+ADE20K~\cite{zhou2017scene} is a large-scale scene parsing benchmark
+providing over 20,000 images with dense 150-class pixel-level
+annotations across diverse indoor and outdoor scenes. We use
+3,000~images from the combined official training and validation
+splits, selected for indoor scene coverage across kitchens, bathrooms,
+living rooms, corridors, offices, retail spaces, and healthcare
+environments.
+
+ADE20K is selected as the base dataset for three reasons.
+First, it provides broad indoor scene diversity with pixel-level
+annotation, covering the environmental contexts most relevant to
+domestic hazard understanding. Second, its 150-class annotation
+scheme includes the floor, furniture, and object classes needed
+for our hazard taxonomy remapping (Table~\ref{tab:taxonomy}).
+Third, its widespread adoption enables comparison of our hazard
+taxonomy with prior indoor segmentation work.
+
+\subsection{ADE20K Hazard Remapping}
+
+ADE20K's 150~semantic classes are remapped to our four-class hazard
+taxonomy using fixed index mappings. Safe~Floor (class~1) includes
+ADE20K indices 3 (floor), 6 (rug/carpet), 9 (staircase), and 11
+(path). Obstacle (class~2) includes furniture indices
+$\{5, 10, 14, 18, 22, 24, 30\}$ (chairs, tables, sofas, beds,
+shelves, cabinets, desks) and clutter indices
+$\{33, 34, 36, 39, 41, 43, 44, 62, 71, 88, 125\}$ (bags, boxes,
+bins, suitcases, carts, and related objects).
+Sharp~Objects (class~3) includes indices 96~(knife) and 97
+(scissors). All remaining ADE20K classes map to Background (class~0).
+
+\subsection{Manual Hazard Annotation Contribution}
+
+Since no existing dataset provides pixel-level annotations aligned
+with indoor injury risk, we introduce a \textbf{manual hazard
+annotation dataset} of 100~ADE20K indoor images with pixel-level
+labels created using Make~Sense~AI, a browser-based polygon
+annotation tool (\url{makesense.ai}). Images were selected from
+ADE20K to maximise hazard content: kitchen images for knife/scissors
+presence, bathroom images for wet floor surfaces, and
+living/dining room images for furniture and clutter obstacles.
+
+\noindent\textbf{Annotation protocol.}
+Three hazard classes were annotated using closed polygon regions:
+\begin{itemize}
+\item \textbf{Safe Floor} (mapped to class~1): All floor surfaces
+including dry tiles, hardwood, carpets, and rugs.
+\item \textbf{Obstacle} (mapped to class~2): Any furniture or loose
+object that could cause a collision or trip hazard, including chairs,
+tables, bags, and clutter on the floor.
+\item \textbf{Sharp Objects} (mapped to class~3): Any visibly sharp
+instrument including knives, scissors, and broken glass.
+\end{itemize}
+
+Table~\ref{tab:ann_stats} summarises annotation statistics.
+The high number of Obstacle annotations (222) compared to Safe~Floor
+(107) reflects the greater diversity of obstacle types in indoor
+scenes. Sharp~Objects (186~annotations) is intentionally
+overrepresented to address the extreme pixel-level sparsity of this
+class in the ADE20K base annotations.
+
+\begin{table}[h]
+\centering
+\caption{Manual Annotation Statistics (100 images, 199 annotated masks)}
+\label{tab:ann_stats}
+\begin{tabular}{lcc}
+\toprule
+\textbf{Class} & \textbf{Annotated Regions} & \textbf{Images Containing Class} \\
+\midrule
+Safe Floor & 107 & 72 \\
+Obstacle & 222 & 89 \\
+Sharp Objects & 186 & 63 \\
+\midrule
+\textbf{Total} & \textbf{515} &: \\
+\bottomrule
+\end{tabular}
+\end{table}
+
+\noindent\textbf{Label mapping.}
+Exact string matching (case-insensitive) is applied to annotation
+labels: ``sharp objects'' / ``sharp object'' / ``knife'' /
+``scissors'' $\to$~3; ``obstacle'' / ``clutter'' /
+``clutter/~obstacles'' / ``furniture'' $\to$~2;
+``dry floor'' / ``wet floor'' / ``safe floor'' / ``floor'' $\to$~1.
+
+\subsection{COCO Sharp Object Augmentation}
+
+To address the extreme scarcity of Sharp~Objects pixels across
+ADE20K, we incorporate 186~images from the COCO 2017 validation
+set~\cite{lin2014coco} containing knife (category~49) or scissors
+(category~87) instances with pixel-level instance segmentation
+annotations. COCO instance masks are converted to class~3
+(Sharp~Objects) semantic labels.
+
+A key design decision is to apply \textbf{no floor-level spatial
+constraint}. Prior work on indoor hazard detection has sometimes
+argued that sharp objects are only hazardous when on the floor.
+We reject this constraint: a knife on a kitchen counter can fall
+and cause injury; scissors on a desk are accessible to children;
+a sharp kitchen tool visible anywhere in the scene represents a
+hazard worth flagging. Restricting labels to the lower portion
+of the image would suppress valid positive annotations and
+reduce training signal. We include all COCO sharp object
+annotations regardless of vertical position, with a minimum
+area threshold of 200~pixels to exclude degenerate instances.
+
+\subsection{Mask Priority Merging}
+
+Manual annotations override ADE20K remapping at annotated locations,
+since manual labels are higher-quality and specifically designed for
+hazard classification. COCO masks are used directly without any
+ADE20K remapping. The priority order is:
+(1) Manual annotation (highest priority),
+(2) COCO annotation, (3) ADE20K remapping (fallback).
+
+\subsection{Data Partitioning}
+
+All 3,000~ADE20K images are shuffled with fixed seed~42 and
+partitioned into a strict 70/15/15 split: 2,100~training,
+450~validation, and 450~test images. Manual annotation images
+and COCO images are added exclusively to the training set.
+The 450~test images are used only for final evaluation and
+are never used during model development or hyperparameter selection.
+
+\subsection{Preprocessing and Augmentation}
+
+All images and masks are resized to $256{\times}256$ pixels.
+Masks use nearest-neighbour interpolation to prevent label
+interpolation artefacts at class boundaries. Images are normalised
+with ImageNet statistics (mean~$[0.485, 0.456, 0.406]$,
+std~$[0.229, 0.224, 0.225]$). During training, random horizontal
+flipping (probability~0.5) is applied with synchronised image-mask
+transformation, doubling training sample diversity.
+
+\subsection{Class Distribution and Imbalance Analysis}
+
+Table~\ref{tab:class_dist} shows the approximate class distribution
+in the training set. Background dominates at ${\sim}74\%$ of pixels,
+reflecting the large proportion of walls, ceilings, and
+unclassified surfaces in indoor scenes. Sharp~Objects represents
+less than 1\% of total pixels despite 230~training images
+containing the class (44~from ADE20K, 186~from COCO), an effective
+imbalance ratio of approximately 46:1.
+
+\begin{table}[h]
+\centering
+\caption{Training Set Class Distribution and Loss Weights}
+\label{tab:class_dist}
+\begin{tabular}{lcccc}
+\toprule
+\textbf{Class} & \textbf{Pixel \%} & \textbf{Weight} & \textbf{Images} & \textbf{Source} \\
+\midrule
+Background & $\sim$74\% & 0.5 & 2,100 & ADE20K \\
+Safe Floor & $\sim$16\% & 1.5 & 1,847 & ADE20K+Manual \\
+Obstacle & $\sim$9\% & 2.0 & 1,203 & ADE20K+Manual \\
+Sharp Objects & $<1\%$ & 6.0 & 230 & ADE20K+Manual+COCO \\
+\bottomrule
+\end{tabular}
+\end{table}
+
+This extreme imbalance motivates the class weight of 6.0 for Sharp
+Objects--12$\times$ the background weight--and the COCO augmentation
+strategy. Despite these measures, Sharp~Objects achieves zero IoU
+in evaluation, highlighting that pixel-level sparsity at this
+scale ($<0.05\%$ of test pixels) represents a fundamental challenge
+for discriminative training that class weighting alone cannot overcome.

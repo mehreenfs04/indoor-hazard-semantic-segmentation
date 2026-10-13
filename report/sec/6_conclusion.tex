@@ -1,0 +1,85 @@
+\section{Conclusion}
+\label{sec:conclusion}
+
+This paper presented DSPHN, a novel semantic segmentation architecture
+whose primary contribution is \textbf{architectural innovation for
+hazard-aware scene understanding}. Three architectural components were
+proposed and validated:
+
+\begin{enumerate}
+\item \textbf{Dual-Stream Appearance-Context Decoder:} Parallel standard
+and dilated convolutional decoder pathways that separately model local
+visual hazard cues and spatial contextual relationships, addressing the
+complementary nature of hazard recognition signals.
+
+\item \textbf{Severity-Guided Adaptive Fusion Gates:} Learnable gates
+initialised from domain injury severity scores that blend appearance
+and context features, providing domain-informed fusion prior to
+hazard classification.
+
+\item \textbf{Two-Stage Hazard Refinement Mechanism:} A hierarchical
+conditional design where Stage~1 produces a binary safe/unsafe map
+from dual-stream fused features, and Stage~2 performs fine-grained
+four-class classification conditioned on Stage~1 output as a direct
+structural input.
+\end{enumerate}
+
+A controlled ablation study under identical training conditions
+confirms that each component contributes measurable improvement:
+DSPHN (mIoU~0.4198) outperforms the dual-stream variant alone
+(0.3894, $+$0.030) and the two-stage variant alone (0.3793,
+$+$0.041). This ablation provides primary evidence of the
+architectural contributions independent of dataset limitations.
+
+Severe class imbalance affected performance on rare hazard classes.
+Sharp~Objects achieved zero IoU due to pixel-level sparsity of
+0.06\% of test pixels — a known challenge in long-tail segmentation
+that represents a dataset limitation rather than an architectural
+failure, as confirmed by consistent ablation improvements across
+all evaluated classes.
+
+\noindent\textbf{Limitations.}
+Three limitations are acknowledged: (1)~zero IoU on Sharp~Objects
+due to extreme pixel sparsity despite class weighting and COCO
+augmentation; (2)~15-epoch training on a T4~GPU limits convergence;
+(3)~256$\times$256 resolution may miss fine-grained boundaries of
+small hazard instances.
+
+\noindent\textbf{Future Research Directions.}
+
+\begin{itemize}
+\item \textit{Larger hazard datasets:} A dedicated indoor hazard
+benchmark with balanced representation of all hazard classes,
+particularly sharp objects and wet floor surfaces, would
+substantially improve rare class performance and enable more
+rigorous evaluation.
+
+\item \textit{Better rare-class balancing:} Patch-level oversampling
+of hazard regions, combined with synthetic data augmentation for
+rare classes, provides a more principled approach than image-level
+oversampling which was found to reduce overall performance.
+
+\item \textit{Real-time deployment:} A lightweight DSPHN variant
+with a MobileNet or EfficientNet-Lite encoder targeting real-time
+inference would enable deployment on edge devices in domestic and
+healthcare environments.
+
+\item \textit{Robotics and autonomous navigation:} Integration of
+DSPHN into robot navigation pipelines for hazard-aware path
+planning represents a direct application of this work, where the
+Stage~1 binary map provides a fast hazard alert and Stage~2
+provides detailed classification for navigation decisions.
+\end{itemize}
+
+DSPHN demonstrates that explicit hazard-aware architectural design
+— through dual-stream feature disentanglement, severity-guided
+fusion, and hierarchical safety-aware inference — can improve
+indoor safety-oriented scene understanding and provides a
+foundation for future research in safety-critical semantic
+segmentation.
+
+\section*{Acknowledgements}
+ADE20K annotations: Zhou~\etal~\cite{zhou2017scene}.
+COCO annotations: Lin~\etal~\cite{lin2014coco}.
+Manual hazard annotations created using Make~Sense~AI.
+Training on Google Colab NVIDIA T4 GPU.

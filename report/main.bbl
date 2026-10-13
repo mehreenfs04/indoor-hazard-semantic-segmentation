@@ -1,0 +1,143 @@
+\begin{thebibliography}{22}
+\providecommand{\natexlab}[1]{#1}
+\providecommand{\url}[1]{\texttt{#1}}
+\expandafter\ifx\csname urlstyle\endcsname\relax
+  \providecommand{\doi}[1]{doi: #1}\else
+  \providecommand{\doi}{doi: \begingroup \urlstyle{rm}\Url}\fi
+
+\bibitem[Cai and Vasconcelos(2018)]{cai2018cascade}
+Zhaowei Cai and Nuno Vasconcelos.
+\newblock Cascade {R-CNN}: Delving into high quality object detection.
+\newblock In \emph{CVPR}, 2018.
+
+\bibitem[Cao et~al.(2022)Cao, Wang, Chen, Jiang, Zhang, Tian, and
+  Wang]{cao2022swinunet}
+Hu Cao, Yueyue Wang, Joy Chen, Dongsheng Jiang, Xiaopeng Zhang, Qi Tian, and
+  Manning Wang.
+\newblock Swin-{UNet}: Unet-like pure transformer for medical image
+  segmentation.
+\newblock In \emph{ECCV Workshops}, 2022.
+
+\bibitem[Chen et~al.(2018)Chen, Papandreou, Kokkinos, Murphy, and
+  Yuille]{chen2017deeplab}
+Liang-Chieh Chen, George Papandreou, Iasonas Kokkinos, Kevin Murphy, and Alan
+  Yuille.
+\newblock {DeepLab}: Semantic segmentation with deep convolutional nets, atrous
+  convolution, and fully connected crfs.
+\newblock \emph{IEEE TPAMI}, 2018.
+
+\bibitem[Chen et~al.(2020)Chen, Lin, Wang, Wu, Qian, Li, and Zeng]{chen2020bi}
+Xiaokang Chen, Kwan-Yee Lin, Jingbo Wang, Wayne Wu, Chen Qian, Hongsheng Li,
+  and Gang Zeng.
+\newblock Bi-directional cross-modality feature propagation with
+  separation-and-aggregation gate for rgb-d semantic segmentation.
+\newblock In \emph{ECCV}, 2020.
+
+\bibitem[Eigen et~al.(2014)Eigen, Puhrsch, and Fergus]{eigen2014depth}
+David Eigen, Christian Puhrsch, and Rob Fergus.
+\newblock Depth map prediction from a single image using a multi-scale deep
+  network.
+\newblock In \emph{NeurIPS}, 2014.
+
+\bibitem[Hu et~al.(2018)Hu, Shen, and Sun]{hu2018squeeze}
+Jie Hu, Li Shen, and Gang Sun.
+\newblock Squeeze-and-excitation networks.
+\newblock In \emph{CVPR}, 2018.
+
+\bibitem[Islam et~al.(2017)Islam, Naha, Rochan, Bruce, and
+  Wang]{islam2017label}
+Md~Amirul Islam, Shujon Naha, Mrigank Rochan, Neil Bruce, and Yang Wang.
+\newblock Label refinement network for coarse-to-fine semantic segmentation.
+\newblock \emph{arXiv:1703.00551}, 2017.
+
+\bibitem[Lin et~al.(2014)Lin, Maire, Belongie, Hays, Perona, Ramanan, Dollar,
+  and Zitnick]{lin2014coco}
+Tsung-Yi Lin, Michael Maire, Serge Belongie, James Hays, Pietro Perona, Deva
+  Ramanan, Piotr Dollar, and C.~Lawrence Zitnick.
+\newblock Microsoft {COCO}: Common objects in context.
+\newblock In \emph{ECCV}, 2014.
+
+\bibitem[Lin et~al.(2017)Lin, Goyal, Girshick, He, and Dollar]{lin2017focal}
+Tsung-Yi Lin, Priya Goyal, Ross Girshick, Kaiming He, and Piotr Dollar.
+\newblock Focal loss for dense object detection.
+\newblock In \emph{ICCV}, 2017.
+
+\bibitem[Long et~al.(2015)Long, Shelhamer, and Darrell]{long2015fully}
+Jonathan Long, Evan Shelhamer, and Trevor Darrell.
+\newblock Fully convolutional networks for semantic segmentation.
+\newblock In \emph{CVPR}, 2015.
+
+\bibitem[Milletari et~al.(2016)Milletari, Navab, and Ahmadi]{milletari2016vnet}
+Fausto Milletari, Nassir Navab, and Seyed-Ahmad Ahmadi.
+\newblock {V-Net}: Fully convolutional neural networks for volumetric medical
+  image segmentation.
+\newblock In \emph{3DV}, 2016.
+
+\bibitem[Oktay et~al.(2018)Oktay, Schlemper, Folgoc, Lee, Heinrich, Misawa,
+  Mori, McDonagh, Hammerla, Kainz, Glocker, and Rueckert]{oktay2018attention}
+Ozan Oktay, Jo Schlemper, Loic~Le Folgoc, Matthew Lee, Mattias Heinrich,
+  Kazunari Misawa, Kensaku Mori, Steven McDonagh, Nils Hammerla, Bernhard
+  Kainz, Ben Glocker, and Daniel Rueckert.
+\newblock Attention {U-Net}: Learning where to look for the pancreas.
+\newblock In \emph{MIDL}, 2018.
+
+\bibitem[Ronneberger et~al.(2015)Ronneberger, Fischer, and
+  Brox]{ronneberger2015unet}
+Olaf Ronneberger, Philipp Fischer, and Thomas Brox.
+\newblock {U-Net}: Convolutional networks for biomedical image segmentation.
+\newblock In \emph{MICCAI}, pages 234--241, 2015.
+
+\bibitem[Silberman et~al.(2012)Silberman, Hoiem, Kohli, and
+  Fergus]{silberman2012indoor}
+Nathan Silberman, Derek Hoiem, Pushmeet Kohli, and Rob Fergus.
+\newblock Indoor segmentation and support inference from {RGBD} images.
+\newblock In \emph{ECCV}, 2012.
+
+\bibitem[Song et~al.(2015)Song, Lichtenberg, and Xiao]{song2015sun}
+Shuran Song, Samuel Lichtenberg, and Jianxiong Xiao.
+\newblock {SUN RGB-D}: A {RGB-D} scene understanding benchmark suite.
+\newblock In \emph{CVPR}, 2015.
+
+\bibitem[Taghanaki et~al.(2019)Taghanaki, Abhishek, Cohen, Cohen-Adad, and
+  Hamarneh]{taghanaki2019combo}
+Saeid~Asgari Taghanaki, Kumar Abhishek, Joseph~Paul Cohen, Julien Cohen-Adad,
+  and Ghassan Hamarneh.
+\newblock Combo loss: Handling input and output imbalance in multi-organ
+  segmentation.
+\newblock \emph{Comput. Med. Imaging Graph.}, 2019.
+
+\bibitem[Tummala et~al.(2021)]{tummala2021stair}
+Slava Tummala et~al.
+\newblock Staircase detection and recognition for indoor navigation.
+\newblock In \emph{Electronics}, 2021.
+
+\bibitem[Wang et~al.(2018)Wang, Girshick, Gupta, and He]{wang2018nonlocal}
+Xiaolong Wang, Ross Girshick, Abhinav Gupta, and Kaiming He.
+\newblock Non-local neural networks.
+\newblock In \emph{CVPR}, 2018.
+
+\bibitem[{World Health Organization}(2021)]{who2021falls}
+{World Health Organization}.
+\newblock Falls fact sheet, 2021.
+
+\bibitem[Xie et~al.(2021)Xie, Wang, Yu, Anandkumar, Alvarez, and
+  Luo]{xie2021segformer}
+Enze Xie, Wenhai Wang, Zhiding Yu, Anima Anandkumar, Jose Alvarez, and Ping
+  Luo.
+\newblock {SegFormer}: Simple and efficient design for semantic segmentation
+  with transformers.
+\newblock In \emph{NeurIPS}, 2021.
+
+\bibitem[Zhao et~al.(2017)Zhao, Shi, Qi, Wang, and Jia]{zhao2017pyramid}
+Hengshuang Zhao, Jianping Shi, Xiaojuan Qi, Xiaogang Wang, and Jiaya Jia.
+\newblock Pyramid scene parsing network.
+\newblock In \emph{CVPR}, 2017.
+
+\bibitem[Zhou et~al.(2017)Zhou, Zhao, Puig, Fidler, Barriuso, and
+  Torralba]{zhou2017scene}
+Bolei Zhou, Hang Zhao, Xavier Puig, Sanja Fidler, Adela Barriuso, and Antonio
+  Torralba.
+\newblock Scene parsing through {ADE20K} dataset.
+\newblock In \emph{CVPR}, 2017.
+
+\end{thebibliography}

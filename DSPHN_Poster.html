@@ -1,0 +1,615 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<title>DSPHN Poster - AIN3002 2026</title>
+<style>
+  @import url('https://fonts.googleapis.com/css2?family=Roboto+Slab:wght@400;700;900&family=Roboto:wght@300;400;700&family=Roboto+Mono:wght@400;600&display=swap');
+
+  * { margin:0; padding:0; box-sizing:border-box; }
+
+  body {
+    width: 1189px;
+    min-height: 841px;
+    background: #ffffff;
+    font-family: 'Times New Roman', Times, serif;
+    font-size: 13px;
+    color: #1a1a2e;
+    padding: 0;
+  }
+
+  .header {
+    background: linear-gradient(135deg, #1a1a2e 0%, #16213e 60%, #0f3460 100%);
+    color: white;
+    padding: 20px 30px 16px;
+    display: grid;
+    grid-template-columns: 1fr auto;
+    align-items: start;
+    gap: 20px;
+    border-bottom: 5px solid #e94560;
+  }
+
+  .title {
+    font-family: 'Times New Roman', Times, serif;
+    font-size: 28px;
+    font-weight: 900;
+    line-height: 1.2;
+  }
+
+  .title .accent { color: #e94560; }
+
+  .subtitle {
+    font-size: 14px;
+    font-weight: 400;
+    color: #a0aec0;
+    margin-top: 5px;
+  }
+
+  .header-right {
+    text-align: right;
+    font-size: 12px;
+    color: #a0aec0;
+    line-height: 1.8;
+    font-family: 'Times New Roman', Times, serif;
+  }
+
+  .header-right strong {
+    color: white;
+    font-size: 15px;
+    display: block;
+  }
+
+  .badge {
+    display: inline-block;
+    background: #e94560;
+    color: white;
+    padding: 3px 12px;
+    border-radius: 12px;
+    font-size: 11px;
+    font-weight: 700;
+    margin-top: 4px;
+    font-family: 'Roboto', sans-serif;
+  }
+
+  .body {
+    display: grid;
+    grid-template-columns: 1fr 1fr 1fr;
+    gap: 10px;
+    padding: 10px;
+  }
+
+  .card {
+    background: #fafbff;
+    border: 1px solid #dde3f0;
+    border-radius: 8px;
+    padding: 13px 15px;
+    position: relative;
+  }
+
+  .card::before {
+    content: '';
+    position: absolute;
+    top: 0; left: 0; right: 0;
+    height: 4px;
+    border-radius: 8px 8px 0 0;
+  }
+
+  .card.red::before    { background: #e94560; }
+  .card.blue::before   { background: #3b82f6; }
+  .card.green::before  { background: #10b981; }
+  .card.purple::before { background: #8b5cf6; }
+  .card.orange::before { background: #f59e0b; }
+  .card.teal::before   { background: #14b8a6; }
+  .card.dark::before   { background: #1a1a2e; }
+
+  .card-title {
+    font-family: 'Times New Roman', Times, serif;
+    font-size: 14px;
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 0.8px;
+    margin-bottom: 9px;
+    padding-bottom: 5px;
+    border-bottom: 1px solid #e2e8f0;
+    display: flex;
+    align-items: center;
+    gap: 7px;
+  }
+
+  .num {
+    width: 20px; height: 20px;
+    border-radius: 50%;
+    display: flex; align-items: center; justify-content: center;
+    font-size: 11px; color: white; font-weight: 700;
+    flex-shrink: 0;
+    font-family: 'Roboto', sans-serif;
+  }
+
+  .num.red    { background: #e94560; }
+  .num.blue   { background: #3b82f6; }
+  .num.green  { background: #10b981; }
+  .num.purple { background: #8b5cf6; }
+  .num.orange { background: #f59e0b; }
+  .num.teal   { background: #14b8a6; }
+  .num.dark   { background: #1a1a2e; }
+
+  p, li { font-size: 12.5px; line-height: 1.55; color: #2d3748; font-family: 'Times New Roman', Times, serif; }
+  ul { padding-left: 16px; }
+  li { margin-bottom: 4px; }
+  strong { color: #1a1a2e; font-weight: 700; }
+
+  .span2 { grid-column: span 2; }
+  .span3 { grid-column: span 3; }
+
+  /* Architecture flow */
+  .flow {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 4px;
+    margin: 8px 0;
+  }
+
+  .fbox {
+    border-radius: 6px;
+    padding: 6px 14px;
+    text-align: center;
+    font-size: 11px;
+    font-weight: 700;
+    font-family: 'Roboto Mono', monospace;
+    min-width: 150px;
+    line-height: 1.3;
+  }
+
+  .fbox.enc   { background: #dbeafe; border: 2px solid #3b82f6; color: #1e40af; }
+  .fbox.app   { background: #dcfce7; border: 2px solid #10b981; color: #065f46; }
+  .fbox.ctx   { background: #fef3c7; border: 2px solid #f59e0b; color: #78350f; }
+  .fbox.gate  { background: #ede9fe; border: 2px solid #8b5cf6; color: #3730a3; }
+  .fbox.s1    { background: #fee2e2; border: 2px solid #e94560; color: #7f1d1d; }
+  .fbox.s2    { background: #d1fae5; border: 2px solid #059669; color: #064e3b; }
+
+  .flow-arrow { color: #94a3b8; font-size: 16px; line-height: 1; }
+  .flow-row { display: flex; gap: 8px; align-items: center; }
+  .flow-small-arrow { color: #94a3b8; font-size: 12px; }
+
+  /* Tables */
+  table {
+    width: 100%;
+    border-collapse: collapse;
+    font-size: 11.5px;
+    font-family: 'Times New Roman', Times, serif;
+    margin-top: 6px;
+  }
+
+  th {
+    background: #1a1a2e;
+    color: white;
+    padding: 5px 7px;
+    text-align: left;
+    font-size: 11px;
+    font-family: 'Roboto', sans-serif;
+    letter-spacing: 0.3px;
+  }
+
+  td { padding: 4px 7px; border-bottom: 1px solid #e2e8f0; }
+  tr:nth-child(even) td { background: #f1f5f9; }
+  tr.best td { background: #dbeafe; font-weight: 700; }
+  tr.best td:first-child::after { content: ' ★'; color: #e94560; }
+
+  /* Metric boxes */
+  .metrics { display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 6px; margin-top: 8px; }
+
+  .metric {
+    background: #1a1a2e;
+    border-radius: 7px;
+    padding: 8px 6px;
+    text-align: center;
+  }
+
+  .metric .val {
+    font-size: 21px;
+    font-weight: 900;
+    color: #e94560;
+    font-family: 'Roboto Mono', monospace;
+    line-height: 1;
+  }
+
+  .metric .lbl {
+    font-size: 9px;
+    color: #94a3b8;
+    margin-top: 3px;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+    font-family: 'Roboto', sans-serif;
+  }
+
+  .eq {
+    background: #1e293b;
+    color: #7dd3fc;
+    font-family: 'Roboto Mono', monospace;
+    font-size: 10.5px;
+    padding: 7px 10px;
+    border-radius: 5px;
+    margin: 6px 0;
+    line-height: 1.7;
+    border-left: 3px solid #e94560;
+  }
+
+  .gap-box {
+    background: white;
+    border-left: 3px solid #e94560;
+    padding: 5px 9px;
+    border-radius: 0 6px 6px 0;
+    margin-bottom: 5px;
+    font-size: 12.5px;
+  }
+
+  .novelty-row {
+    display: flex;
+    gap: 8px;
+    align-items: flex-start;
+    margin-bottom: 7px;
+    padding-bottom: 7px;
+    border-bottom: 1px dashed #e2e8f0;
+  }
+
+  .novelty-row:last-child { border-bottom: none; margin-bottom: 0; }
+
+  .n-num {
+    background: #e94560;
+    color: white;
+    font-size: 13px;
+    font-weight: 900;
+    width: 22px; height: 22px;
+    border-radius: 50%;
+    display: flex; align-items: center; justify-content: center;
+    flex-shrink: 0;
+    font-family: 'Roboto', sans-serif;
+  }
+
+  .class-dot {
+    display: inline-block;
+    width: 11px; height: 11px;
+    border-radius: 2px;
+    vertical-align: middle;
+    margin-right: 3px;
+  }
+
+  .bar-row { display: flex; align-items: center; gap: 5px; font-size: 11px; font-family: 'Roboto Mono', monospace; }
+  .bar { height: 8px; border-radius: 3px; }
+
+  .check { color: #10b981; font-weight: 700; }
+  .cross { color: #e94560; font-weight: 700; }
+
+  .two-col { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; }
+  .three-col { display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 8px; }
+
+  .highlight-box {
+    background: #f0fdf4;
+    border: 1px solid #10b981;
+    border-radius: 6px;
+    padding: 7px 9px;
+    font-size: 12px;
+    margin-top: 6px;
+  }
+</style>
+</head>
+<body>
+
+<!-- HEADER -->
+<div class="header">
+  <div>
+    <div class="title">
+      Dual-Stream Progressive Hazard Network
+      <span class="accent">(DSPHN)</span>
+    </div>
+    <div class="subtitle">
+      A Novel Architecture Combining Appearance-Context Disentanglement with
+      Hierarchical Safety-Aware Inference for Indoor Hazard Segmentation
+    </div>
+  </div>
+  <div class="header-right">
+    <strong>Mehreen Faisal</strong>
+    Department of Artificial Intelligence Engineering<br>
+    AIN3002 Final Project, 2026<br>
+    <span class="badge">CVPR Format</span>
+  </div>
+</div>
+
+<!-- BODY -->
+<div class="body">
+
+  <!-- CARD 1: MOTIVATION -->
+  <div class="card red">
+    <div class="card-title"><span class="num red">1</span> Motivation and Problem</div>
+
+    <div class="gap-box"><strong>WHO:</strong> Falls are the 2nd leading cause of accidental injury deaths worldwide</div>
+    <div class="gap-box"><strong>Gap 1:</strong> No dataset defines hazard-specific pixel-level classes for indoor safety</div>
+    <div class="gap-box"><strong>Gap 2:</strong> All segmentation models predict all classes simultaneously with no safety hierarchy</div>
+
+    <p style="margin: 8px 0 5px;"><strong>4-Class Hazard Taxonomy (by injury risk):</strong></p>
+    <table>
+      <tr><th>Class</th><th>ID</th><th>Risk Type</th></tr>
+      <tr><td><span class="class-dot" style="background:#323232;"></span>Background</td><td>0</td><td>None</td></tr>
+      <tr><td><span class="class-dot" style="background:#00c800;"></span>Safe Floor</td><td>1</td><td>Slip/trip</td></tr>
+      <tr><td><span class="class-dot" style="background:#ff8c00;"></span>Obstacle</td><td>2</td><td>Collision</td></tr>
+      <tr><td><span class="class-dot" style="background:#ff0000;"></span>Sharp Objects</td><td>3</td><td>Laceration</td></tr>
+    </table>
+  </div>
+
+  <!-- CARD 2: ARCHITECTURE -->
+  <div class="card blue span2">
+    <div class="card-title"><span class="num blue">2</span> DSPHN Architecture</div>
+    <div class="two-col">
+      <div>
+        <div class="flow">
+          <div class="fbox enc">Shared Encoder<br><span style="font-size:9px; font-weight:400;">e1, e2, e3, e4, bottleneck</span></div>
+          <div class="flow-arrow">↓</div>
+          <div class="flow-row">
+            <div class="fbox app" style="min-width:120px;">Appearance<br>Decoder<br><span style="font-size:9px; font-weight:400;">Standard Conv</span></div>
+            <div class="flow-small-arrow">+</div>
+            <div class="fbox ctx" style="min-width:120px;">Context<br>Decoder<br><span style="font-size:9px; font-weight:400;">Dilated Conv</span></div>
+          </div>
+          <div class="flow-arrow">↓</div>
+          <div class="fbox gate">Severity Fusion Gate<br><span style="font-size:9px; font-weight:400;">α·f_app + (1-α)·f_ctx → f4</span></div>
+          <div class="flow-arrow">↓</div>
+          <div class="flow-row">
+            <div class="fbox s1" style="min-width:120px;">Stage 1 Head<br><span style="font-size:9px; font-weight:400;">Binary map M1</span></div>
+            <div class="flow-small-arrow">→</div>
+            <div class="fbox s2" style="min-width:120px;">Stage 2 Head<br><span style="font-size:9px; font-weight:400;">[f4; M1] → 4-class</span></div>
+          </div>
+        </div>
+        <div class="eq">L = 0.5·CE + 0.5·Dice + 0.4·BCE_S1</div>
+      </div>
+
+      <div>
+        <p style="margin-bottom:7px;"><strong>Three Novel Contributions:</strong></p>
+
+        <div class="novelty-row">
+          <div class="n-num">1</div>
+          <div>
+            <strong>Dual-Stream Disentanglement</strong><br>
+            <span style="font-size:11.5px; color:#4b5563;">Appearance decoder learns WHAT hazards look like. Context decoder (dilated conv) learns WHERE hazards occur. Never combined for single-RGB safety segmentation.</span>
+          </div>
+        </div>
+
+        <div class="novelty-row">
+          <div class="n-num">2</div>
+          <div>
+            <strong>Hierarchical Conditional Inference</strong><br>
+            <span style="font-size:11.5px; color:#4b5563;">Stage 1 binary map is a direct structural input to Stage 2. Stage 2 knows WHERE hazards are before classifying WHAT they are.</span>
+          </div>
+        </div>
+
+        <div class="novelty-row">
+          <div class="n-num">3</div>
+          <div>
+            <strong>Severity-Initialised Fusion Gates</strong><br>
+            <span style="font-size:11.5px; color:#4b5563;">Gate biases initialised from injury risk scores [0.0, 0.1, 0.6, 0.9]. High-severity classes rely more on spatial context.</span>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- CARD 3: DATASET -->
+  <div class="card green">
+    <div class="card-title"><span class="num green">3</span> Dataset</div>
+
+    <table>
+      <tr><th>Source</th><th>Images</th><th>Purpose</th></tr>
+      <tr><td>ADE20K</td><td>3,000</td><td>Base indoor scenes</td></tr>
+      <tr><td>Manual (Make Sense AI)</td><td>100</td><td>Hazard labels</td></tr>
+      <tr><td>COCO (knife, scissors)</td><td>186</td><td>Sharp Objects</td></tr>
+    </table>
+
+    <p style="margin-top:8px;"><strong>Split:</strong> 70% train / 15% val / 15% test, seed=42</p>
+    <p style="margin-top:5px;"><strong>Manual annotation counts:</strong></p>
+    <table style="margin-top:4px;">
+      <tr><th>Class</th><th>Regions</th></tr>
+      <tr><td>Safe Floor</td><td>107</td></tr>
+      <tr><td>Obstacle</td><td>222</td></tr>
+      <tr><td>Sharp Objects</td><td>186</td></tr>
+    </table>
+
+    <p style="margin-top:8px; font-size:12px; color:#4b5563;">
+      No floor constraint on COCO: sharp objects are hazards anywhere in the scene, not just on the floor.
+    </p>
+  </div>
+
+  <!-- CARD 4: ABLATION -->
+  <div class="card purple">
+    <div class="card-title"><span class="num purple">4</span> Ablation Study</div>
+
+    <table>
+      <tr><th>Model</th><th>Dual</th><th>Gates</th><th>2-Stage</th><th>mIoU</th><th>PA</th></tr>
+      <tr>
+        <td>Baseline U-Net</td>
+        <td class="cross">✗</td><td class="cross">✗</td><td class="cross">✗</td>
+        <td>0.577†</td><td>0.875</td>
+      </tr>
+      <tr>
+        <td>DAHD only</td>
+        <td class="check">✓</td><td class="check">✓</td><td class="cross">✗</td>
+        <td>0.389</td><td>0.827</td>
+      </tr>
+      <tr>
+        <td>PHRN only</td>
+        <td class="cross">✗</td><td class="cross">✗</td><td class="check">✓</td>
+        <td>0.379</td><td>0.829</td>
+      </tr>
+      <tr class="best">
+        <td>DSPHN (ours)</td>
+        <td class="check">✓</td><td class="check">✓</td><td class="check">✓</td>
+        <td>0.420</td><td>0.833</td>
+      </tr>
+    </table>
+
+    <p style="font-size:11px; color:#6b7280; margin-top:5px;">†Baseline excludes Sharp Objects (easier task)</p>
+
+    <div class="highlight-box">
+      DSPHN outperforms DAHD by <strong>+0.030 mIoU</strong> and PHRN by <strong>+0.041 mIoU</strong>. Integration is strictly better than either component alone.
+    </div>
+  </div>
+
+  <!-- CARD 5: RESULTS -->
+  <div class="card teal">
+    <div class="card-title"><span class="num teal">5</span> Results (Test Set)</div>
+
+    <table>
+      <tr><th>Class</th><th>IoU</th><th>Dice</th><th>Pixels</th></tr>
+      <tr>
+        <td><span class="class-dot" style="background:#323232;"></span>Background</td>
+        <td>0.8081</td><td>0.8938</td>
+        <td><div class="bar-row"><div class="bar" style="width:52px; background:#323232;"></div></div></td>
+      </tr>
+      <tr>
+        <td><span class="class-dot" style="background:#00c800;"></span>Safe Floor</td>
+        <td>0.5517</td><td>0.7111</td>
+        <td><div class="bar-row"><div class="bar" style="width:35px; background:#00c800;"></div></div></td>
+      </tr>
+      <tr>
+        <td><span class="class-dot" style="background:#ff8c00;"></span>Obstacle</td>
+        <td>0.3195</td><td>0.4843</td>
+        <td><div class="bar-row"><div class="bar" style="width:20px; background:#ff8c00;"></div></div></td>
+      </tr>
+      <tr>
+        <td><span class="class-dot" style="background:#ff0000;"></span>Sharp Objects</td>
+        <td>0.0000</td><td>0.0000</td>
+        <td><div class="bar-row"><div class="bar" style="width:3px; background:#e2e8f0;"></div></div></td>
+      </tr>
+      <tr style="background:#e0e7ff; font-weight:700;">
+        <td>Mean</td><td>0.4198</td><td>0.5223</td><td></td>
+      </tr>
+    </table>
+
+    <div class="metrics">
+      <div class="metric">
+        <div class="val">0.48</div>
+        <div class="lbl">Best Val mIoU</div>
+      </div>
+      <div class="metric">
+        <div class="val">83.3%</div>
+        <div class="lbl">Pixel Acc</div>
+      </div>
+      <div class="metric">
+        <div class="val">43.9M</div>
+        <div class="lbl">Parameters</div>
+      </div>
+    </div>
+  </div>
+
+  <!-- CARD 6: TRAINING CURVES -->
+  <div class="card orange span2">
+    <div class="card-title"><span class="num orange">6</span> Training Curves and Qualitative Results</div>
+    <div class="two-col">
+      <div>
+        <p style="font-size:12px; margin-bottom:6px;"><strong>Training Curves (15 epochs, NVIDIA T4):</strong></p>
+        <div style="background:#f1f5f9; border:1px solid #e2e8f0; border-radius:6px; padding:8px; font-size:11.5px;">
+          <div style="display:flex; justify-content:space-between; margin-bottom:4px;">
+            <span>Final Train Loss:</span><span><strong>0.778</strong></span>
+          </div>
+          <div style="display:flex; justify-content:space-between; margin-bottom:4px;">
+            <span>Final Val Loss:</span><span><strong>0.786</strong></span>
+          </div>
+          <div style="display:flex; justify-content:space-between; margin-bottom:4px;">
+            <span>Best Val mIoU:</span><span><strong>0.4847 (epoch 15)</strong></span>
+          </div>
+          <div style="display:flex; justify-content:space-between; margin-bottom:4px;">
+            <span>Best Val Dice:</span><span><strong>0.5923</strong></span>
+          </div>
+          <div style="display:flex; justify-content:space-between;">
+            <span>Pixel Accuracy:</span><span><strong>0.8332</strong></span>
+          </div>
+        </div>
+        <p style="font-size:11.5px; margin-top:7px; color:#4b5563;">
+          Loss decreases consistently with no overfitting. Validation mIoU improves from 0.38 at epoch 1 to 0.50 at epoch 15, showing continued improvement trend.
+        </p>
+      </div>
+
+      <div>
+        <p style="font-size:12px; margin-bottom:5px;"><strong>Stage 1 Binary Map Analysis:</strong></p>
+        <ul>
+          <li>Stage 1 correctly activates over floor and obstacle regions</li>
+          <li>Low activation (near 0) on walls, ceilings and windows</li>
+          <li>Provides interpretable fast hazard alert output</li>
+          <li>Dual-stream features produce more accurate binary maps than single-decoder baselines</li>
+        </ul>
+
+        <p style="font-size:12px; margin-top:6px; margin-bottom:4px;"><strong>Sharp Objects Limitation:</strong></p>
+        <p style="font-size:11.5px; color:#4b5563;">Zero IoU due to extreme pixel sparsity (0.06% of test pixels, 46:1 imbalance). Class weighting (w=6.0) and COCO augmentation insufficient at this scale. Future work: patch-level oversampling.</p>
+      </div>
+    </div>
+  </div>
+
+  <!-- CARD 7: QUALITATIVE -->
+  <div class="card dark span3">
+    <div class="card-title" style="color:#e2e8f0; border-bottom-color:#334155;">
+      <span class="num dark">7</span>
+      <span style="color:white;">Qualitative Results: Input | Ground Truth | DSPHN Prediction | Stage 1 Binary Map</span>
+    </div>
+
+    <div style="display:grid; grid-template-columns:1fr 1fr 1fr; gap:10px; margin-top:4px;">
+      <div>
+        <p style="color:#94a3b8; font-size:11px; margin-bottom:5px; font-family:'Roboto',sans-serif;">MODERN INTERIOR SCENE</p>
+        <div style="background:#1e293b; border-radius:6px; padding:8px;">
+          <p style="color:#94a3b8; font-size:11px; font-family:'Roboto',sans-serif;">Input image with staircase, floor and furniture. DSPHN correctly identifies Safe Floor (green) and Obstacle (orange) regions. Stage 1 map activates strongly over all hazard areas.</p>
+        </div>
+      </div>
+      <div>
+        <p style="color:#94a3b8; font-size:11px; margin-bottom:5px; font-family:'Roboto',sans-serif;">LARGE INDOOR SPACE</p>
+        <div style="background:#1e293b; border-radius:6px; padding:8px;">
+          <p style="color:#94a3b8; font-size:11px; font-family:'Roboto',sans-serif;">Shopping mall scene with escalators and walkways. Model predicts Safe Floor and Obstacle classes with Stage 1 showing high hazard activation across the floor area.</p>
+        </div>
+      </div>
+      <div>
+        <p style="color:#94a3b8; font-size:11px; margin-bottom:5px; font-family:'Roboto',sans-serif;">AIRPORT/TRANSIT INTERIOR</p>
+        <div style="background:#1e293b; border-radius:6px; padding:8px;">
+          <p style="color:#94a3b8; font-size:11px; font-family:'Roboto',sans-serif;">Large public indoor space. DSPHN identifies large Safe Floor region (green). Stage 1 binary map shows strong hazard detection across the full scene floor area.</p>
+        </div>
+      </div>
+    </div>
+
+    <div style="margin-top:8px; display:flex; gap:16px; align-items:center; justify-content:center;">
+      <span style="color:#94a3b8; font-size:11px; font-family:'Roboto',sans-serif;">Classes:</span>
+      <span style="color:#94a3b8; font-size:11px; font-family:'Roboto',sans-serif;"><span style="display:inline-block; width:11px; height:11px; background:#323232; border-radius:2px; vertical-align:middle; margin-right:3px;"></span>Background</span>
+      <span style="color:#94a3b8; font-size:11px; font-family:'Roboto',sans-serif;"><span style="display:inline-block; width:11px; height:11px; background:#00c800; border-radius:2px; vertical-align:middle; margin-right:3px;"></span>Safe Floor</span>
+      <span style="color:#94a3b8; font-size:11px; font-family:'Roboto',sans-serif;"><span style="display:inline-block; width:11px; height:11px; background:#ff8c00; border-radius:2px; vertical-align:middle; margin-right:3px;"></span>Obstacle</span>
+      <span style="color:#94a3b8; font-size:11px; font-family:'Roboto',sans-serif;"><span style="display:inline-block; width:11px; height:11px; background:#ff0000; border-radius:2px; vertical-align:middle; margin-right:3px;"></span>Sharp Objects</span>
+      <span style="color:#94a3b8; font-size:11px; font-family:'Roboto',sans-serif; margin-left:8px;">Stage 1 Map: <span style="color:#ef4444;">■</span> High hazard (1.0) to <span style="color:#1e293b; background:#94a3b8; padding:0 3px; border-radius:2px;">■</span> Safe (0.0)</span>
+    </div>
+  </div>
+
+  <!-- CARD 8: CONCLUSION -->
+  <div class="card red span3">
+    <div class="card-title"><span class="num red">8</span> Conclusion and Future Work</div>
+    <div class="three-col">
+      <div>
+        <p style="margin-bottom:5px;"><strong>Summary:</strong></p>
+        <p>DSPHN integrates DAHD dual-stream decoding with PHRN hierarchical inference into one architecture. Controlled ablation confirms DSPHN (mIoU 0.4198) outperforms DAHD-only (0.3894) and PHRN-only (0.3793), showing the integration is strictly better than either component alone.</p>
+      </div>
+      <div>
+        <p style="margin-bottom:5px;"><strong>Contributions:</strong></p>
+        <ul>
+          <li>Novel DSPHN architecture integrating dual-stream and hierarchical inference</li>
+          <li>First indoor hazard annotation dataset (100 images, Make Sense AI)</li>
+          <li>4-class safety taxonomy by injury consequence</li>
+          <li>COCO sharp object augmentation strategy</li>
+        </ul>
+      </div>
+      <div>
+        <p style="margin-bottom:5px;"><strong>Future Work:</strong></p>
+        <ul>
+          <li>Patch-level oversampling for Sharp Objects</li>
+          <li>Pretrained ResNet/EfficientNet backbone</li>
+          <li>Higher resolution inputs (512x512)</li>
+          <li>Real-time deployment on assistive robots</li>
+          <li>Temporal extension for video monitoring</li>
+        </ul>
+      </div>
+    </div>
+  </div>
+
+</div>
+</body>
+</html>

@@ -1,0 +1,266 @@
+\section{Introduction}
+\label{sec:intro}
+
+According to the World Health Organization, falls are the second
+leading cause of accidental injury deaths globally, with the vast
+majority occurring in indoor domestic environments~\cite{who2021falls}.
+The scale of this problem is significant: the United States Centers
+for Disease Control and Prevention estimates that falls cause over
+36,000 deaths and 8~million emergency department visits annually in
+the US alone. Beyond falls, lacerations from sharp objects--knives,
+scissors, and broken glass--represent a further substantial source
+of domestic injury, particularly among children under five and adults
+over sixty-five. Furniture and clutter obstacles contribute additional
+collision and entrapment injuries across home, hospital, and retail
+environments.
+
+The development of intelligent domestic systems creates an urgent
+need for vision systems capable of parsing indoor scenes in terms
+of their \textit{safety consequences} rather than purely their
+semantic content. Assistive robots navigating hospital corridors,
+smart monitoring systems for elderly residents, autonomous
+wheelchairs operating in homes, and occupational safety inspection
+systems all require pixel-level knowledge of which regions are safe
+to traverse and which present hazards. A system that cannot
+distinguish a wet slippery floor from a dry safe floor, or that
+classifies a knife on the ground identically to a harmless book,
+is fundamentally inadequate for safety-critical deployment.
+
+Semantic segmentation--the task of assigning a class label to every
+pixel in an image--provides the natural representational framework
+for this problem. However, applying existing segmentation architectures
+to indoor hazard understanding exposes two fundamental gaps that
+current methods do not address.
+
+\noindent\textbf{Gap~1: Missing hazard-specific annotations.}
+No existing segmentation benchmark defines pixel classes aligned
+with indoor injury risk. ADE20K~\cite{zhou2017scene}, the largest
+indoor scene parsing benchmark, provides 150~semantic categories
+but treats all floor types identically and has no concept of
+obstacle severity or laceration risk. The COCO
+dataset~\cite{lin2014coco} provides instance segmentation for
+everyday objects including knives and scissors, but does not frame
+these in terms of safety consequence. NYU Depth V2~\cite{silberman2012indoor}
+and SUN~RGB-D~\cite{song2015sun} similarly provide generic indoor
+annotations without safety-critical class definitions.
+
+\noindent\textbf{Gap~2: Single-level simultaneous prediction.}
+Every existing semantic segmentation architecture--U-Net~\cite{ronneberger2015unet},
+DeepLab~\cite{chen2017deeplab}, PSPNet~\cite{zhao2017pyramid},
+SegFormer~\cite{xie2021segformer}--predicts all semantic classes
+simultaneously from a single decoder pass over encoder features.
+This design provides no mechanism to first answer whether a region
+is dangerous before classifying its specific hazard type, missing
+a natural two-level hierarchy inherent to safety reasoning. A
+human inspector, when assessing indoor hazard risk, naturally first
+identifies which regions deserve attention (coarse binary detection)
+and then classifies the specific hazard type (fine-grained recognition).
+No existing architecture models this reasoning structure.
+
+This paper addresses both gaps through a unified architectural
+and data contribution. For Gap~1, we introduce the first
+hazard-specific segmentation taxonomy and contribute a manually
+annotated indoor hazard dataset. For Gap~2, we propose DSPHN,
+which integrates two previously separate architectural paradigms
+into a single model:
+
+\begin{enumerate}
+\item \textbf{DAHD dual-stream decoding:} Parallel Appearance and
+Context decoders with severity-guided Fusion Gates disentangle the
+two key aspects of hazard recognition: local visual appearance cues
+(\textit{what} does a hazard look like?) and spatial contextual cues
+(\textit{where} does a hazard occur relative to its surroundings?).
+
+\item \textbf{PHRN hierarchical inference:} A two-stage conditional
+design where Stage~1 first produces a binary safe/unsafe prediction
+from the fused dual-stream features, and Stage~2 receives this
+binary map as a structural input to perform fine-grained four-class
+hazard classification.
+\end{enumerate}
+
+The specific contributions of this paper are:
+
+\begin{itemize}
+\item \textbf{DSPHN: Novel Integrated Architecture.} The first
+segmentation architecture to combine dual-stream appearance-context
+disentanglement with hierarchical safety-aware conditional inference
+for indoor hazard segmentation from a single RGB image. The
+combination produces emergent benefits: Stage~1 maps derived from
+dual-stream features are more accurate than single-decoder Stage~1
+maps, providing better conditioning for Stage~2 and explaining why
+DSPHN outperforms both parent architectures.
+
+\item \textbf{Controlled Ablation Validation.} All three variants
+(DAHD-only, PHRN-only, DSPHN) are trained and evaluated under
+identical conditions. DSPHN achieves mIoU~0.4198 versus
+0.3894~(DAHD-only) and 0.3793~(PHRN-only), demonstrating that
+integration is quantitatively superior to either component alone.
+
+\item \textbf{Indoor Hazard Taxonomy.} A four-class safety-oriented
+taxonomy--Background, Safe~Floor, Obstacle, Sharp~Objects--defined
+by real-world injury consequence rather than semantic identity,
+enabling training signal directly aligned with safety outcomes.
+
+\item \textbf{Manual Hazard Annotation Dataset.} 100~ADE20K indoor
+images manually annotated at pixel level using Make~Sense~AI with
+three hazard categories, constituting the first annotation set
+combining floor safety, obstacle, and sharp object categories for
+indoor segmentation.
+
+\item \textbf{COCO Sharp Object Augmentation.} Integration of
+186~COCO knife and scissors instances without floor-level
+spatial constraint, motivated by the observation that sharp
+objects constitute laceration hazards regardless of their
+vertical position in a scene.
+\end{itemize}
+
+The remainder of this paper is organised as follows.
+Section~\ref{sec:related} reviews related work in semantic
+segmentation, multi-stage architectures, attention mechanisms,
+loss functions, and indoor safety understanding.
+Section~\ref{sec:method} describes the DSPHN architecture in
+full mathematical detail.
+Section~\ref{sec:data} presents the dataset construction and
+annotation methodology.
+Section~\ref{sec:experiments} reports experimental results
+including ablation study, per-class analysis, training dynamics,
+qualitative evaluation, and extended discussion.
+Section~\ref{sec:conclusion} concludes with future directions.
+
+\section{Related Work}
+\label{sec:related}
+
+\subsection{Semantic Segmentation Architectures}
+
+The foundational work of Long~\etal~\cite{long2015fully} established
+fully convolutional networks (FCNs) for dense pixel prediction,
+replacing classification heads with upsampling paths to enable
+end-to-end training for per-pixel label assignment. The
+encoder-decoder paradigm was significantly refined by
+Ronneberger~\etal~\cite{ronneberger2015unet}, whose U-Net
+architecture introduced symmetric skip connections between encoder
+and decoder stages to preserve high-frequency spatial details
+lost during downsampling, originally demonstrated on biomedical
+image segmentation. U-Net's elegant design has since become
+a backbone architecture across diverse domains including remote
+sensing, medical imaging, autonomous driving, and indoor scene
+understanding.
+
+DeepLab~\cite{chen2017deeplab} addressed the need for multi-scale
+context through atrous (dilated) convolution and Atrous Spatial
+Pyramid Pooling (ASPP), enabling the network to capture information
+at multiple receptive field scales without increasing the number
+of parameters. PSPNet~\cite{zhao2017pyramid} employed a Pyramid
+Pooling Module to aggregate global scene context through
+multi-resolution pooling. Subsequent transformer-based architectures
+have achieved state-of-the-art results on benchmark datasets:
+SegFormer~\cite{xie2021segformer} combines a hierarchical Mix
+Transformer encoder with a lightweight all-MLP decoder, while
+Swin-UNet~\cite{cao2022swinunet} adapts the Swin Transformer
+for pure-transformer medical image segmentation.
+
+A critical observation underlying DSPHN is that \textit{all} of
+these architectures share a common design principle: a single decoder
+that predicts all semantic classes simultaneously from encoded
+features. This design treats hazard and non-hazard regions
+identically, providing no hierarchical structure for safety-aware
+reasoning. DSPHN departs from this paradigm by introducing a
+two-stage conditional decoder.
+
+\subsection{Multi-Stream and Dual-Decoder Architectures}
+
+Dual-decoder and multi-stream designs have been primarily explored
+in RGB-D segmentation, where separate processing branches handle
+the RGB and depth input modalities~\cite{chen2020bi}. The
+bi-directional modality fusion approach of Chen~\etal~\cite{chen2020bi}
+uses cross-modal attention to propagate features between the two
+streams. In the single-modality RGB setting, dilated convolutions
+have been used in DeepLab variants to capture multi-scale context,
+but within a single decoder pathway.
+
+DSPHN applies parallel Appearance and Context decoders to a
+\textit{single RGB image}. The dual-stream design is not driven
+by two input modalities but by the semantic distinction between
+two aspects of hazard recognition that benefit from different
+inductive biases: standard convolutions for local texture pattern
+learning (Appearance Decoder) and dilated convolutions for
+spatial relationship modelling over larger receptive fields
+(Context Decoder). This is a qualitatively different motivation
+from RGB-D dual-stream designs.
+
+\subsection{Coarse-to-Fine and Multi-Stage Architectures}
+
+Coarse-to-fine prediction strategies have been applied across
+multiple vision tasks. Eigen~\etal~\cite{eigen2014depth} used
+a two-stage coarse-to-fine network for depth estimation, where a
+global prediction is refined at higher resolution. Cascade
+R-CNN~\cite{cai2018cascade} employs sequential bounding box
+regression stages for object detection, where each stage receives
+refined proposals from the previous. In semantic segmentation,
+label refinement networks~\cite{islam2017label} refine
+coarse predictions at progressively finer resolutions.
+
+DSPHN's two-stage design is qualitatively different from all of
+these. Standard coarse-to-fine approaches refine the \textit{same
+output type} (depth, bounding box, segmentation map) at increasing
+resolution. In DSPHN, Stage~1 and Stage~2 answer
+\textit{categorically different questions}: Stage~1 performs binary
+safe/unsafe detection, while Stage~2 performs four-class hazard
+classification. Stage~1 output is a different type of prediction
+entirely, not a coarser version of Stage~2 output.
+
+\subsection{Attention Mechanisms in Segmentation}
+
+Attention mechanisms have been widely adopted to improve feature
+selectivity. The Squeeze-and-Excitation Network~\cite{hu2018squeeze}
+introduced channel-wise attention via global average pooling to
+recalibrate channel responses. Non-local networks~\cite{wang2018nonlocal}
+modelled long-range spatial dependencies through self-attention.
+Attention U-Net~\cite{oktay2018attention} proposed soft spatial
+attention gates on skip connections, using decoder gating signals
+to suppress irrelevant encoder activations.
+
+DSPHN's Severity Fusion Gates differ from these in three ways:
+(1) they blend two \textit{complete decoder pathways} rather than
+modulating individual skip connections; (2) they are explicitly
+initialised from domain hazard severity scores providing a
+principled starting point for fusion learning; and (3) they learn
+when to trust appearance versus spatial context for each pixel,
+rather than learning which encoder features to suppress.
+
+\subsection{Loss Functions for Class Imbalance}
+
+Class imbalance is pervasive in semantic segmentation.
+Class-weighted Cross-Entropy assigns higher penalties to
+underrepresented classes but optimises pixel-level accuracy.
+Dice Loss~\cite{milletari2016vnet} directly optimises the F1
+overlap coefficient, exhibiting less sensitivity to class frequency
+imbalance. Focal Loss~\cite{lin2017focal} dynamically downweights
+well-classified easy examples to focus training on hard, typically
+minority, pixels. Taghanaki~\etal~\cite{taghanaki2019combo}
+demonstrated that combining Cross-Entropy and Dice Loss consistently
+outperforms either alone across imbalanced segmentation tasks.
+DSPHN extends this combination with an additional binary BCE term
+providing direct Stage~1 supervision, ensuring the binary hazard
+map is accurate before Stage~2 depends on it.
+
+\subsection{Indoor Scene Understanding and Safety}
+
+General indoor segmentation benchmarks (ADE20K~\cite{zhou2017scene},
+NYU Depth V2~\cite{silberman2012indoor}, SUN RGB-D~\cite{song2015sun})
+provide rich semantic annotations for generic indoor parsing but
+define no hazard-specific classes and encode no safety consequence
+information. Prior work addressing specific narrow indoor hazards
+includes staircase detection~\cite{tummala2021stair} using depth
+sensors, IoT-based wet floor alert systems, and object detection
+for robotic obstacle avoidance. These approaches either require
+specialised sensors unavailable in many deployments, or address
+only a single hazard type in isolation.
+
+To our knowledge, no prior work formulates general indoor hazard
+understanding as a unified semantic segmentation problem with
+hazard-class-aware supervision over floor safety, obstacle risk,
+and sharp object detection simultaneously from a standard RGB
+camera. This represents the application gap that DSPHN addresses,
+combined with the architectural novelty of the dual-stream
+hierarchical design.

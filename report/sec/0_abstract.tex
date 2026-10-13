@@ -1,0 +1,36 @@
+\begin{abstract}
+Indoor environments present significant safety hazards including
+slippery floor surfaces, furniture and clutter obstacles, and sharp
+objects, which collectively represent a leading cause of domestic
+injuries worldwide. While semantic segmentation provides a natural
+framework for pixel-level hazard localisation, existing architectures
+predict all semantic classes simultaneously from a single decoder,
+providing no mechanism to exploit the hierarchical structure inherent
+to hazard-aware scene understanding.
+
+This paper presents the \textbf{Dual-Stream Progressive Hazard Network
+(DSPHN)}, whose primary objective is \textit{architectural innovation
+for hazard-aware scene understanding} rather than solely maximising
+segmentation accuracy. DSPHN introduces three architectural
+contributions: (1)~a \textbf{Dual-Stream Appearance-Context Decoder}
+that disentangles local visual hazard cues from spatial contextual
+relationships using parallel standard and dilated convolutional
+decoder pathways; (2)~\textbf{Severity-Guided Adaptive Fusion Gates}
+that blend the two decoder streams using gates initialised from
+domain hazard severity scores; and (3)~a \textbf{Two-Stage Hazard
+Refinement Mechanism} where Stage~1 produces a binary safe/unsafe
+map that serves as a direct structural input to Stage~2 fine
+classification.
+
+To the best of our knowledge, this combination of dual-stream
+appearance-context disentanglement with hierarchical safety-aware
+conditional inference has not been previously proposed for indoor
+hazard segmentation. We further contribute a four-class indoor hazard
+taxonomy and 100~manually annotated images. Experiments on a
+3,000-image hybrid dataset yield test Mean~IoU of \textbf{0.4198}
+and Pixel~Accuracy of \textbf{0.8332}. A controlled ablation study
+confirms that the full DSPHN outperforms both the dual-stream
+component alone (mIoU~0.3894) and the two-stage component alone
+(mIoU~0.3793), validating the contribution of each architectural
+innovation.
+\end{abstract}
