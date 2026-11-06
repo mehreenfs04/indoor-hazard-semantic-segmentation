@@ -11,7 +11,28 @@ DSPHN is a semantic segmentation architecture that identifies safety hazards in 
 
 Built for the Deep Learning for Image Processing course (AIN3002).
 
+📄 [Full report (CVPR format)](report/DSPHN_Report.pdf) · 🖼️ [Poster](DSPHN_Poster.html) (download and open in a browser)
+
+![Qualitative result: input, ground truth, DSPHN prediction and Stage 1 hazard map](report/figs/qual_2.png)
+
 ## Architecture
+
+```
+Input RGB (3×256×256)
+        │
+ Shared encoder (64 → 128 → 256 → 512 → 1024)
+        │
+   ┌────┴─────┐
+Appearance   Context
+decoder      decoder
+(standard)   (dilated)
+   └──┬───────┘
+ Severity fusion gates
+        │
+ Stage 1 head → binary safe/unsafe map
+        │
+ Stage 2 head ([features ; Stage 1 map]) → 4-class hazard map
+```
 
 DSPHN has three key components:
 
@@ -45,12 +66,60 @@ The ablation shows the full model outperforms both the dual-stream-only and two-
 | Obstacle | 0.3195 |
 | Sharp Objects | 0.0000 |
 
+![Training curves](report/figs/training_curves.png)
+
 ## Limitations and Future Work
 
 Sharp Objects scored zero IoU due to extreme pixel sparsity (about 0.06% of test pixels), despite class weighting and COCO augmentation. Training was also limited to 15 epochs at 256×256 resolution on a T4 GPU.
 
 Future work includes larger balanced hazard datasets, better rare-class balancing (e.g. patch-level oversampling), and a lightweight encoder for real-time edge deployment.
 
+## Training setup
+
+| Setting | Value |
+|---|---|
+| Input size | 256 × 256 |
+| Batch size | 8 |
+| Optimizer | Adam, lr = 1e-4 |
+| LR schedule | ReduceLROnPlateau (factor 0.5) |
+| Epochs | 15 (NVIDIA T4, Google Colab) |
+| Split | 70/15/15, seed 42 |
+
+## How to run
+
+1. Open the notebook in [`code/`](code/) in **Google Colab** with a T4 GPU runtime.
+2. Mount Google Drive when prompted. The notebook downloads ADE20K and the COCO knife/scissors images, remaps the labels to the hazard taxonomy, then trains and evaluates the models.
+3. Install anything missing with `pip install -r requirements.txt`.
+
+Inference with a trained checkpoint:
+
+```python
+model = DualStreamProgressiveHazardNetwork(num_classes=4).to(device)
+model.load_state_dict(torch.load("best_DSPHN_model.pth"))
+model.eval()
+
+with torch.no_grad():
+    stage2_seg, stage1_map = model(image_tensor)
+    prediction = torch.argmax(stage2_seg, dim=1)   # 4-class hazard map
+    hazard_alert = stage1_map                      # binary hazard probability
+```
+
+## Repository structure
+
+```
+code/
+  DSPHN notebook (.ipynb)  # data preparation, training, ablations, evaluation
+report/
+  DSPHN_Report.pdf         # full report
+  main.tex, sec/, figs/    # LaTeX source and figures
+DSPHN_Poster.html          # poster
+requirements.txt
+```
+
 ## Built With
 
 Python, PyTorch, torchvision, NumPy, scikit-learn, Pillow, Matplotlib, pycocotools, Google Colab (NVIDIA T4 GPU)
+
+
+---
+Developed by **Mehreen Faisal**, AI Engineering, Bahçeşehir University.
